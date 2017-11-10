@@ -41,6 +41,9 @@ def mass_of_pair(pair):
     ppair = p1 + p2
     return ppair.M()
 
+class Particles:
+    pass
+
 if __name__ == '__main__':
 
 
