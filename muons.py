@@ -19,7 +19,9 @@ def leptons_from_event(tree):
     n_leptons = tree.lep_n
     for i_lepton in range(n_leptons):
         p = four_momentum_of_lepton(i_lepton, tree)
-        leptons.append(p)
+        q = tree.lep_charge[i_lepton]
+        particle = Particle(p,q)
+        leptons.append(particle)
     return leptons
 
 def pairs_from_particles(particles):
@@ -28,21 +30,26 @@ def pairs_from_particles(particles):
     pairs = []
     n_particles = len(particles)
     for i in range(n_particles):
+        charge_i = particles[i].q
         for j in range(i+1 , n_particles):
-            pair = (particles[i], particles[j])
-            pairs.append(pair)
+            charge_j = particles[j].q
+            if charge_i != charge_j:
+                pair = (particles[i], particles[j])
+                pairs.append(pair)
     return pairs
 
 def mass_of_pair(pair):
     '''
     '''
-    p1 = pair[0]
-    p2 = pair[1]
+    p1 = pair[0].p
+    p2 = pair[1].p
     ppair = p1 + p2
     return ppair.M()
 
-class Particles:
-    pass
+class Particle:
+    def __init__(self, p,q):
+        self.p = p
+        self.q = q
 
 if __name__ == '__main__':
 
