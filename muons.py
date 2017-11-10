@@ -33,34 +33,44 @@ def pairs_from_particles(particles):
             pairs.append(pair)
     return pairs
 
-data = TChain("mini")
-data.Add("http://opendata.atlas.cern/release/samples/Data/DataMuons.root")
+def mass_of_pair(pair):
+    '''
+    '''
+    p1 = pair[0]
+    p2 = pair[1]
+    ppair = p1 + p2
+    return ppair.M()
 
-num_events = data.GetEntries()
-print("Number of events = "+str(num_events))
+if __name__ == '__main__':
 
-h_mpair = TH1F("mpair", "Invariant Mass of Leptons ; mass /Gev; freq",50,0,200)
 
-num_events_to_process = 1000
-for i_event in range(num_events_to_process):
-    data.GetEntry(i_event)
-    n_leptons = data.lep_n
-    if n_leptons >= 2:
+
+
+    data = TChain("mini")
+    data.Add("http://opendata.atlas.cern/release/samples/Data/DataMuons.root")
+
+    num_events = data.GetEntries()
+    print("Number of events = "+str(num_events))
+    
+    h_mpair = TH1F("mpair", "Invariant Mass of Leptons ; mass /Gev; freq",50,0,200)
+
+    num_events_to_process = 10000
+    for i_event in range(num_events_to_process):
+        data.GetEntry(i_event)
+        n_leptons = data.lep_n
+        if n_leptons >= 2:
         #print("num of Leptons "+str(n_leptons))
-        leptons = leptons_from_event(data)
-        pairs = pairs_from_particles(leptons) 
+            leptons = leptons_from_event(data)
+            pairs = pairs_from_particles(leptons) 
 
         # TODO: treat casse of more than two leptons
 
  #       print("Leptons Pts are : "+str(pt1)+" , "+str(pt2))
-        for pair in pairs:
-            p1 = pair[0]
-            p2 = pair[1]
-#        print("Lepton Pt from vector = "+str(p1.Pt())+" , " +str(p2.Pt()) )
-            ppair = p1 + p2
-            mpair = ppair.M()
+            for pair in pairs:
+                mpair = mass_of_pair(pair)/1000
+#        print("Lepton Pt from vector = "+str(p1.Pt())+" , " +str(p2.Pt()) 
 #        print("Invariant Mass of lepton pair = " +str(mpair))
-            h_mpair.Fill(mpair/1000)    #converts MeV to GeV
-
-h_mpair.Draw()
+                h_mpair.Fill(mpair)    #converts MeV to GeV
+                
+    h_mpair.Draw()
 raw_input("Press any button to end program")
