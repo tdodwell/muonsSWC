@@ -53,14 +53,14 @@ for i_event in range(num_events_to_process):
         # TODO: treat casse of more than two leptons
 
  #       print("Leptons Pts are : "+str(pt1)+" , "+str(pt2))
-        pair = pairs[0]
-        p1 = pair[0]
-        p2 = pair[1]
+        for pair in pairs:
+            p1 = pair[0]
+            p2 = pair[1]
 #        print("Lepton Pt from vector = "+str(p1.Pt())+" , " +str(p2.Pt()) )
-        ppair = p1 + p2
-        mpair = ppair.M()
+            ppair = p1 + p2
+            mpair = ppair.M()
 #        print("Invariant Mass of lepton pair = " +str(mpair))
-        h_mpair.Fill(mpair/1000)    #converts MeV to GeV
+            h_mpair.Fill(mpair/1000)    #converts MeV to GeV
 
 h_mpair.Draw()
 raw_input("Press any button to end program")
